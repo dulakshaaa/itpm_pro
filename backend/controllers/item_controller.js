@@ -37,7 +37,6 @@ const addItem = async (req, res) => {
     
 };
 
-// Get all items with optional filtering, pagination, and sorting
 const getItems = async (req, res) => {
     try {
         let {
@@ -50,13 +49,68 @@ const getItems = async (req, res) => {
             limit = 10
         } = req.query;
 
-        page = Number(page);
-        limit = Number(limit);
+        // Validate and sanitize pagination parameters
+        page = parseInt(page, 10);
+        limit = parseInt(limit, 10);
         if (isNaN(page) || page < 1 || isNaN(limit) || limit < 1) {
             return res.status(400).json({ message: "Invalid page or limit value" });
         }
+        const skip = (page - 1) * limit;
 
+        // Validate and apply sort field
+        const allowedSortFields = ['name', 'price', 'createdAt', 'updatedAt'];
+        sortBy = sortBy.trim();
+        if (!allowedSortFields.includes(sortBy)) {
+            return res.status(400).json({
+                message: "Invalid sort field provided.",
+                allowedFields: allowedSortFields,
+                received: sortBy
+            });
+        }
+
+        // Validate and apply sort order
+        order = order.toLowerCase();
+        if (!['asc', 'desc'].includes(order)) {
+            return res.status(400).json({ message: "Invalid sort order. Use 'asc' or 'desc'." });
+        }
+        const sortOrder = order === 'asc' ? 1 : -1;
+        const sortOptions = { [sortBy]: sortOrder };
+
+        // Build filter object
         const filter = {};
+
+        if (name?.trim()) {
+            filter.name = { $regex: name.trim(), $options: 'i' }; // Case-insensitive
+        }
+
+        const min = Number(minPrice);
+        const max = Number(maxPrice);
+        if (!isNaN(min) || !isNaN(max)) {
+            filter.price = {};
+            if (!isNaN(min)) filter.price.$gte = min;
+            if (!isNaN(max)) filter.price.$lte = max;
+        }
+
+        // Query database
+        const items = await Item.find(filter)
+            .sort(sortOptions)
+            .skip(skip)
+            .limit(limit);
+
+        const total = await Item.countDocuments(filter);
+
+        // Respond
+        res.status(200).json({
+            total,
+            page,
+            pageSize: items.length,
+            items
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
 // Filter by name (case-insensitive, trimmed)
 if (name?.trim()) {
