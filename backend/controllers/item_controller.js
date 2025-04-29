@@ -92,21 +92,33 @@ const updateItem = async (req, res) => {
     }
 };
 
+const mongoose = require('mongoose');
+
 // Delete item from the store
 const deleteItem = async (req, res) => {
     try {
         const { id } = req.params;
+
+        // Validate ObjectId format
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid item ID format" });
+        }
+
         const deletedItem = await Item.findByIdAndDelete(id);
 
         if (!deletedItem) {
             return res.status(404).json({ message: "Item not found" });
         }
 
-        res.status(200).json({ message: "Item deleted successfully" });
+        res.status(200).json({
+            message: "Item deleted successfully",
+            deletedItem
+        });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 module.exports = {
     addItem,
