@@ -75,8 +75,12 @@ if (!isNaN(min) || !isNaN(max)) {
 
 
 // Validate and sanitize pagination parameters
-const pageNumber = Math.max(Number(req.query.page) || 1, 1);
-const pageLimit = Math.max(Number(req.query.limit) || 10, 1);
+const page = parseInt(req.query.page, 10);
+const limit = parseInt(req.query.limit, 10);
+
+const pageNumber = isNaN(page) || page < 1 ? 1 : page;
+const pageLimit = isNaN(limit) || limit < 1 ? 10 : limit;
+
 const skip = (pageNumber - 1) * pageLimit;
 
 // Validate and apply sort field and order
