@@ -23,3 +23,7 @@ export const generateReport = async (patientId, reportData) => {
   const response = await axios.post(`/patients/${patientId}/reports`, reportData);
   return response.data;
 };
+export const generateReport1 = async (patientId, reportData) => {
+  const response = await axios.post(`/patients/${patientId}/reports`, reportData);
+  return response.data;
+};
