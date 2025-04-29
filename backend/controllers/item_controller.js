@@ -54,10 +54,18 @@ const getItems = async (req, res) => {
 };
 
 
+const mongoose = require('mongoose');
+
 // Get one item by ID
 const getItem = async (req, res) => {
     try {
         const { id } = req.params;
+
+        // Validate MongoDB ObjectId
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid item ID format" });
+        }
+
         const item = await Item.findById(id);
 
         if (!item) {
@@ -69,6 +77,7 @@ const getItem = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 // Update item in the store
 const updateItem = async (req, res) => {
