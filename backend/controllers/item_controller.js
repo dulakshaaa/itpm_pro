@@ -49,11 +49,17 @@ const getItems = async (req, res) => {
         const skip = (page - 1) * limit;
         const sortOrder = order === 'asc' ? 1 : -1;
 
-        // Optional: whitelist of allowed sort fields
-        const allowedSortFields = ['name', 'price', 'createdAt', 'updatedAt'];
-        if (!allowedSortFields.includes(sortBy)) {
-            return res.status(400).json({ message: `Invalid sort field. Allowed: ${allowedSortFields.join(', ')}` });
-        }
+       // Validate sort field against a whitelist to prevent invalid or unsafe sorting
+const allowedSortFields = ['name', 'price', 'createdAt', 'updatedAt'];
+
+if (sortBy && !allowedSortFields.includes(sortBy)) {
+    return res.status(400).json({
+        message: "Invalid sort field.",
+        allowedFields: allowedSortFields,
+        received: sortBy
+    });
+}
+
 
         const items = await Item.find(filter)
             .sort({ [sortBy]: sortOrder })
