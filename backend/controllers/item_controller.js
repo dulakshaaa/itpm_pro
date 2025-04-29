@@ -4,17 +4,37 @@ const Item = require('../models/item_model');
 const addItem = async (req, res) => {
     try {
         const { name, description, price, image } = req.body;
-
-        if (!name || !description || !price) {
-            return res.status(400).json({ message: "Name, description, and price are required." });
+    
+        // Validate required fields
+        if (!name?.trim() || !description?.trim() || price === undefined) {
+            return res.status(400).json({
+                message: "Name, description, and price are required."
+            });
         }
-
-        const newItem = new Item({ name, description, price, image });
+    
+        // Validate price as a number
+        if (isNaN(price) || Number(price) < 0) {
+            return res.status(400).json({
+                message: "Price must be a non-negative number."
+            });
+        }
+    
+        const newItem = new Item({
+            name: name.trim(),
+            description: description.trim(),
+            price: Number(price),
+            image: image?.trim() || ""
+        });
+    
         await newItem.save();
-        res.status(201).json({ message: "Item added successfully", item: newItem });
+        res.status(201).json({
+            message: "Item added successfully",
+            item: newItem
+        });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
+    
 };
 
 // Get all items with optional filtering, pagination, and sorting
