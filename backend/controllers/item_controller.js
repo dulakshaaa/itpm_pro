@@ -145,16 +145,17 @@ const deleteItem = async (req, res) => {
     try {
         const { id } = req.params;
 
-        // Validate ObjectId format
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ message: "Invalid item ID format" });
-        }
+        // Validate MongoDB ObjectId format before attempting deletion
+if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid item ID format. Please provide a valid MongoDB ObjectId." });
+}
 
-        const deletedItem = await Item.findByIdAndDelete(id);
+const deletedItem = await Item.findByIdAndDelete(id);
 
-        if (!deletedItem) {
-            return res.status(404).json({ message: "Item not found" });
-        }
+if (!deletedItem) {
+    return res.status(404).json({ message: `No item found with ID: ${id}. Deletion could not be performed.` });
+}
+
 
         res.status(200).json({
             message: "Item deleted successfully",
