@@ -57,14 +57,22 @@ const getItems = async (req, res) => {
         }
 
         const filter = {};
-        if (name) {
-            filter.name = { $regex: name, $options: 'i' };
-        }
-        if (minPrice || maxPrice) {
-            filter.price = {};
-            if (minPrice) filter.price.$gte = Number(minPrice);
-            if (maxPrice) filter.price.$lte = Number(maxPrice);
-        }
+
+// Filter by name (case-insensitive, trimmed)
+if (name?.trim()) {
+    filter.name = { $regex: name.trim(), $options: 'i' };
+}
+
+// Filter by price range if any values are provided
+const min = Number(minPrice);
+const max = Number(maxPrice);
+
+if (!isNaN(min) || !isNaN(max)) {
+    filter.price = {};
+    if (!isNaN(min)) filter.price.$gte = min;
+    if (!isNaN(max)) filter.price.$lte = max;
+}
+
 
 // Validate and sanitize pagination parameters
 const pageNumber = Math.max(Number(req.query.page) || 1, 1);
