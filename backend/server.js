@@ -35,6 +35,9 @@ app.use(function(req, res,next){
     res.setHeader('Access-Control-Allow-Headers', 'content-type');
     next();
 });
+app.use(cors());
+app.use(express.json());
+app.use('/uploads', express.static('uploads'));
 
 //item_function api
 const itemRoutes = require('./routes/item_route')
@@ -68,7 +71,7 @@ app.use('/medicalRecord_api',medicalRecords);
 const adminRoutes = require('./routes/Admin_routes')
 app.use('/AdminAuth',adminRoutes)
 
-
+app.use('/api/patients', patientRoutes);
 
 //mongo setup
 const PORT = process.env.PORT
