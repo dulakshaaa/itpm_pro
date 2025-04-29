@@ -46,8 +46,13 @@ const getItems = async (req, res) => {
             if (maxPrice) filter.price.$lte = Number(maxPrice);
         }
 
-        const skip = (page - 1) * limit;
-        const sortOrder = order === 'asc' ? 1 : -1;
+        // Validate pagination parameters
+const page = Math.max(Number(page) || 1, 1);  // Ensure page is at least 1
+const limit = Math.max(Number(limit) || 10, 1);  // Ensure limit is at least 1
+
+const skip = (page - 1) * limit;
+const sortOrder = order === 'asc' ? 1 : -1;
+
 
        // Validate sort field against a whitelist to prevent invalid or unsafe sorting
 const allowedSortFields = ['name', 'price', 'createdAt', 'updatedAt'];
