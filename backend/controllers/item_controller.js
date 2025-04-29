@@ -4,10 +4,14 @@ const Item = require('../models/item_model');
 const addItem = async (req, res) => {
     try {
         const { name, description, price, image } = req.body;
+
+        if (!name || !description || !price) {
+            return res.status(400).json({ message: "Name, description, and price are required." });
+        }
+
         const newItem = new Item({ name, description, price, image });
         await newItem.save();
-        console.log('success');
-        res.status(201).json(newItem);
+        res.status(201).json({ message: "Item added successfully", item: newItem });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -17,17 +21,23 @@ const addItem = async (req, res) => {
 const getItems = async (req, res) => {
     try {
         const items = await Item.find();
-        res.json(items);
+        res.status(200).json(items);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
-// Get one items
+
+// Get one item by ID
 const getItem = async (req, res) => {
     try {
-        const itemID = req.params.id
-        const items = await Item.findById(itemID);
-        res.json(items);
+        const { id } = req.params;
+        const item = await Item.findById(id);
+
+        if (!item) {
+            return res.status(404).json({ message: "Item not found" });
+        }
+
+        res.status(200).json(item);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -36,13 +46,20 @@ const getItem = async (req, res) => {
 // Update item in the store
 const updateItem = async (req, res) => {
     try {
-        const itemId = req.params.id;
-        const { name, description, price } = req.body;
-        const updatedItem = await Item.findByIdAndUpdate(itemId, { name, description, price }, { new: true });
+        const { id } = req.params;
+        const { name, description, price, image } = req.body;
+
+        const updatedItem = await Item.findByIdAndUpdate(
+            id,
+            { name, description, price, image },
+            { new: true, runValidators: true }
+        );
+
         if (!updatedItem) {
             return res.status(404).json({ message: "Item not found" });
         }
-        res.json(updatedItem);
+
+        res.status(200).json({ message: "Item updated successfully", item: updatedItem });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -51,15 +68,16 @@ const updateItem = async (req, res) => {
 // Delete item from the store
 const deleteItem = async (req, res) => {
     try {
-        const itemId = req.params.id;
-        const deletedItem = await Item.findByIdAndDelete(itemId);
+        const { id } = req.params;
+        const deletedItem = await Item.findByIdAndDelete(id);
+
         if (!deletedItem) {
             return res.status(404).json({ message: "Item not found" });
         }
-        res.sendStatus(204);
+
+        res.status(200).json({ message: "Item deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: error.message });
-
     }
 };
 
