@@ -85,16 +85,21 @@ const skip = (pageNumber - 1) * pageLimit;
 
 // Validate and apply sort field and order
 const allowedSortFields = ['name', 'price', 'createdAt', 'updatedAt'];
-const sortField = req.query.sortBy || 'createdAt';
-const sortOrder = req.query.order === 'asc' ? 1 : -1;
+const requestedSortField = req.query.sortBy?.trim() || 'createdAt';
+const requestedOrder = req.query.order?.toLowerCase();
 
-if (!allowedSortFields.includes(sortField)) {
+const sortOrder = requestedOrder === 'asc' ? 1 : -1;
+
+if (!allowedSortFields.includes(requestedSortField)) {
     return res.status(400).json({
         message: "Invalid sort field provided.",
         allowedFields: allowedSortFields,
-        received: sortField
+        received: requestedSortField
     });
 }
+
+const sortOptions = { [requestedSortField]: sortOrder };
+
 
 
 // If no valid sort field is provided, use the default
