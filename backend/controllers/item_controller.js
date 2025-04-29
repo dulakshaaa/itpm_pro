@@ -156,28 +156,29 @@ const sortOptions = { [requestedSortField]: sortOrder };
 
 
 
+const defaultSortField = 'createdAt';
+const allowedSortFields = ['name', 'price', 'createdAt', 'updatedAt'];
+
 // If no valid sort field is provided, use the default
 const sortField = allowedSortFields.includes(sortBy) ? sortBy : defaultSortField;
 
+try {
+    const items = await Item.find(filter)
+        .sort({ [sortField]: sortOrder })
+        .skip(skip)
+        .limit(limit);
 
+    const total = await Item.countDocuments(filter);
 
-        const items = await Item.find(filter)
-            .sort({ [sortBy]: sortOrder })
-            .skip(skip)
-            .limit(limit);
-
-        const total = await Item.countDocuments(filter);
-
-        res.status(200).json({
-            total,
-            page,
-            pageSize: items.length,
-            items
-        });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
+    res.status(200).json({
+        total,
+        page,
+        pageSize: items.length,
+        items
+    });
+} catch (error) {
+    res.status(500).json({ message: error.message });
+}
 
 
 
