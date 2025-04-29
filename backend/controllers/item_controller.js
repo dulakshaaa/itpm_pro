@@ -46,26 +46,24 @@ const getItems = async (req, res) => {
             if (maxPrice) filter.price.$lte = Number(maxPrice);
         }
 
-        // Validate pagination parameters
-const page = Math.max(Number(page) || 1, 1);  // Ensure page is at least 1
-const limit = Math.max(Number(limit) || 10, 1);  // Ensure limit is at least 1
+// Validate and sanitize pagination parameters
+const pageNumber = Math.max(Number(req.query.page) || 1, 1);
+const pageLimit = Math.max(Number(req.query.limit) || 10, 1);
+const skip = (pageNumber - 1) * pageLimit;
 
-const skip = (page - 1) * limit;
-const sortOrder = order === 'asc' ? 1 : -1;
-
-
-    // Define a default sort field (e.g., createdAt) in case the user doesn't provide one
-const defaultSortField = 'createdAt';
+// Validate and apply sort field and order
 const allowedSortFields = ['name', 'price', 'createdAt', 'updatedAt'];
+const sortField = req.query.sortBy || 'createdAt';
+const sortOrder = req.query.order === 'asc' ? 1 : -1;
 
-// If the provided sort field is invalid, return an error
-if (sortBy && !allowedSortFields.includes(sortBy)) {
+if (!allowedSortFields.includes(sortField)) {
     return res.status(400).json({
         message: "Invalid sort field provided.",
         allowedFields: allowedSortFields,
-        received: sortBy
+        received: sortField
     });
 }
+
 
 // If no valid sort field is provided, use the default
 const sortField = allowedSortFields.includes(sortBy) ? sortBy : defaultSortField;
