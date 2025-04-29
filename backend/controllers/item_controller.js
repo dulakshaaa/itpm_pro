@@ -54,16 +54,22 @@ const skip = (page - 1) * limit;
 const sortOrder = order === 'asc' ? 1 : -1;
 
 
-       // Validate sort field against a whitelist to prevent invalid or unsafe sorting
+    // Define a default sort field (e.g., createdAt) in case the user doesn't provide one
+const defaultSortField = 'createdAt';
 const allowedSortFields = ['name', 'price', 'createdAt', 'updatedAt'];
 
+// If the provided sort field is invalid, return an error
 if (sortBy && !allowedSortFields.includes(sortBy)) {
     return res.status(400).json({
-        message: "Invalid sort field.",
+        message: "Invalid sort field provided.",
         allowedFields: allowedSortFields,
         received: sortBy
     });
 }
+
+// If no valid sort field is provided, use the default
+const sortField = allowedSortFields.includes(sortBy) ? sortBy : defaultSortField;
+
 
 
         const items = await Item.find(filter)
