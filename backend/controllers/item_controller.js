@@ -20,11 +20,25 @@ const addItem = async (req, res) => {
 // Get all items with optional filtering, pagination, and sorting
 const getItems = async (req, res) => {
     try {
-        const { name, minPrice, maxPrice, sortBy = 'createdAt', order = 'desc', page = 1, limit = 10 } = req.query;
+        let {
+            name,
+            minPrice,
+            maxPrice,
+            sortBy = 'createdAt',
+            order = 'desc',
+            page = 1,
+            limit = 10
+        } = req.query;
+
+        page = Number(page);
+        limit = Number(limit);
+        if (isNaN(page) || page < 1 || isNaN(limit) || limit < 1) {
+            return res.status(400).json({ message: "Invalid page or limit value" });
+        }
 
         const filter = {};
         if (name) {
-            filter.name = { $regex: name, $options: 'i' }; // case-insensitive search
+            filter.name = { $regex: name, $options: 'i' };
         }
         if (minPrice || maxPrice) {
             filter.price = {};
@@ -32,19 +46,25 @@ const getItems = async (req, res) => {
             if (maxPrice) filter.price.$lte = Number(maxPrice);
         }
 
-        const skip = (Number(page) - 1) * Number(limit);
+        const skip = (page - 1) * limit;
         const sortOrder = order === 'asc' ? 1 : -1;
+
+        // Optional: whitelist of allowed sort fields
+        const allowedSortFields = ['name', 'price', 'createdAt', 'updatedAt'];
+        if (!allowedSortFields.includes(sortBy)) {
+            return res.status(400).json({ message: `Invalid sort field. Allowed: ${allowedSortFields.join(', ')}` });
+        }
 
         const items = await Item.find(filter)
             .sort({ [sortBy]: sortOrder })
             .skip(skip)
-            .limit(Number(limit));
+            .limit(limit);
 
         const total = await Item.countDocuments(filter);
 
         res.status(200).json({
             total,
-            page: Number(page),
+            page,
             pageSize: items.length,
             items
         });
@@ -52,6 +72,7 @@ const getItems = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 
 const mongoose = require('mongoose');
