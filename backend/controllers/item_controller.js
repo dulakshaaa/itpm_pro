@@ -100,15 +100,30 @@ const getItem = async (req, res) => {
 };
 
 
+const mongoose = require('mongoose');
+
 // Update item in the store
 const updateItem = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, description, price, image } = req.body;
+        const updateData = req.body;
+
+        // Validate ObjectId
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid item ID format" });
+        }
+
+        // Ensure updateData has at least one updatable field
+        const allowedFields = ['name', 'description', 'price', 'image'];
+        const hasValidFields = Object.keys(updateData).some(field => allowedFields.includes(field));
+
+        if (!hasValidFields) {
+            return res.status(400).json({ message: "No valid fields provided for update" });
+        }
 
         const updatedItem = await Item.findByIdAndUpdate(
             id,
-            { name, description, price, image },
+            updateData,
             { new: true, runValidators: true }
         );
 
@@ -121,6 +136,7 @@ const updateItem = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 const mongoose = require('mongoose');
 
