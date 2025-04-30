@@ -8,14 +8,35 @@ require('dotenv').config();
 // Create doctor
 const createDoctor = async (req, res) => {
     try {
-        const { doctorName, doctorEmail, doctorSpecialty, doctorContact, doctorAddress, doctorPassword } = req.body;
-        const newDoctor = new Doctor({ doctorName, doctorEmail, doctorSpecialty, doctorContact, doctorAddress, doctorPassword });
+        const {
+            doctorName,
+            doctorEmail,
+            doctorSpecialty,
+            doctorContact,
+            doctorAddress,
+            doctorPassword
+        } = req.body;
+
+        const newDoctor = new Doctor({
+            doctorName,
+            doctorEmail,
+            doctorSpecialty,
+            doctorContact,
+            doctorAddress,
+            doctorPassword
+        });
+
         await newDoctor.save();
+
         res.status(201).json(newDoctor);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({
+            message: 'Failed to create doctor',
+            error: error.message
+        });
     }
 };
+
 
 //doctor login
 
