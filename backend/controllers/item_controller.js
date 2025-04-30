@@ -4,7 +4,7 @@ const Item = require('../models/item_model');
 const addItem = async (req, res) => {
     try {
         const { name, description, price, image } = req.body;
-        const newItem = new Item({ name, description, price, image });
+        const newItem = new Item({ Name, Description, price, image });
         await newItem.save();
         console.log('success');
         res.status(201).json(newItem);
