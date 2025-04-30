@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+//define appointment schema with default status and doctor reference
 
 const appointmentSchema = new mongoose.Schema({
     fullName: { type: String, required: true },
