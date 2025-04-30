@@ -5,9 +5,10 @@ exports.createAppointment = async (req, res) => {
         const newAppointment = await Appointment.create(req.body);
         res.status(201).json(newAppointment);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(400).json({ message: 'Failed to create appointment', error: error.message });
     }
 };
+
 
 exports.getAllAppointments = async (req, res) => {
     try {
