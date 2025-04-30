@@ -9,7 +9,7 @@
     width: 50px;
     height: 50px;
     border: 2px solid #007bfg; /* Border color */
-    border-radius: 10px;
+    border-radius: 11px;
     display: flex;
     justify-content: center;
     align-items: center;
