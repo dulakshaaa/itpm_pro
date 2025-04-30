@@ -74,7 +74,7 @@ const Profile = () => {
             // SweetAlert for successful update
             Swal.fire({
                 icon: 'success',
-                title: 'Profile Updated',
+                title: 'Profile Updated',//modify case sensitive
                 text: 'Your profile has been successfully updated!',
                 timer: 2000,
                 showConfirmButton: false
