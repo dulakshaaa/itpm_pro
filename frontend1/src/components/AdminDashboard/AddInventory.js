@@ -92,8 +92,9 @@ const AddInventory = () => {
 
     return (
        <div className="createForm">
-    <h1>Inventory Details</h1>
-    <form onSubmit={handleSubmit}>
+    <h1>Inventory Details</h2>
+    <form onSubmit={handleSubmit}>//add image input field and submit button to inventory form
+
         <div className="createFormInput">
             <label htmlFor="name">Item Name :</label>
             <input type="text" name="name" id="name" value={inventoryData.name} onChange={handleChange} />
