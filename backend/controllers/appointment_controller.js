@@ -38,18 +38,6 @@ exports.getAllAppointments = async (req, res) => {
 };
 
 
-exports.getAppointmentById = async (req, res) => {
-    try {
-        const appointment = await Appointment.findById(req.params.id);
-        if (!appointment) {
-            res.status(404).json({ message: 'Appointment not found' });
-            return;
-        }
-        res.status(200).json(appointment);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
 
 exports.updateAppointment = async (req, res) => {
     try {
