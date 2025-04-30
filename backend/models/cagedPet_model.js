@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+// add mongoose schema for caged pet records with medical history
 const petSchema = new mongoose.Schema({
   petName: {
     type: String,
