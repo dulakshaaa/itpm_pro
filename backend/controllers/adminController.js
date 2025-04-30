@@ -1,7 +1,7 @@
 const Doctor = require('../models/doctor_model');
 
 const login = async (req, res) => {
-    const { email, password, role } = req.body;
+    const { Email, password, role } = req.body;
 
     try {
         let user;
