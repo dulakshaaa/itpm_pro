@@ -114,7 +114,7 @@ const BookAppointment = () => {
             try {
                 // Payload matches the mongoose schema
                 const appointmentData = {
-                    fullName,
+                    Full Name,//add variable
                     email,
                     contactNumber,
                     doctorName,
