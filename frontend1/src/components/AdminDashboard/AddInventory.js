@@ -91,14 +91,20 @@ const AddInventory = () => {
     };
 
     return (
-        <div className="createForm">
-            <h1>Inventory Details</h1>
-            <form onSubmit={handleSubmit}>
-                <div className="createFormInput">
-                    <label htmlFor="name">Item Name :</label>
-                    <input type="text" name="name" id="name" value={inventoryData.name} onChange={handleChange} />
-                    {errors.name && <div className="error" style={{ color: 'yellow' }}>{errors.name}</div>}
-                </div>
+       <div className="createForm">
+    <h2>Inventory Details</h2>
+    <form onSubmit={handleSubmit}>//add image input field and submit button to inventory form
+
+        <div className="createFormInput">
+            <label htmlFor="name">Item Name :</label>
+            <input type="text" name="name" id="name" value={inventoryData.name} onChange={handleChange} />
+            {errors.name && <div className="error" style={{ color: 'yellow' }}>{errors.name}</div>}
+        </div>
+    </form>
+</div>
+    //create inventory item name input field with error message display
+
+
                 <div className="createFormInput">
                     <label htmlFor="description">Item Description :</label>
                     <textarea name="description" id="description" cols="30" rows="10" onChange={handleChange} value={inventoryData.description}></textarea>
