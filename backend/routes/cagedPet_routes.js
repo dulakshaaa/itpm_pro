@@ -1,12 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const petController = require('../controllers/cagedPet_controller');
+const cagedPetController = require('../controllers/cagedPet_controller');
 
-// Routes for pets
-router.post('/add_pet', petController.createPet);
-router.get('/get_all_pets', petController.getAllPets);
-router.get('/get_pet/:id', petController.getPetById);
-router.put('/update_pet/:id', petController.updatePet);
-router.delete('/delete_pet/:id', petController.deletePet);
+// CRUD operations for patients
+router
+  .route('/pets')
+  .post(cagedPetController.createPet)
+  .get(cagedPetController.getAllPets);
+
+router
+  .route('/pets/:id')
+  .get(cagedPetController.getPetById)
+  .put(cagedPetController.updatePet)
+  .delete(cagedPetController.deletePet);
 
 module.exports = router;
