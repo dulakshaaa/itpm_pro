@@ -49,15 +49,17 @@ const DoctorAvailableTimes = () => {
                 <input type="text" name="doctorSearch" id="doctorSearch" placeholder="Search" onChange={(e) => {setSearchTerm(e.target.value)}} value={searchTerm} />
               
             </div>
-            <table className="userDetailsTable" id="toPrint">
-                <thead>
-                    <tr>
-                        <th>Doctor Name</th>
-                        <th>Time Slot</th>
-                        <th>Specialty</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
+          <table className="doctorDetailsTable" id="toPrint">// change in doctor details
+    <thead>
+        <tr>
+            <th>Doctor Name</th>
+            <th>Time Slot</th>
+            <th>Specialty</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+</table>
+
                 <tbody>
                     {filteredTimes.map(time => (
                         <tr key={time._id}>
