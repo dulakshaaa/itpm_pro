@@ -8,14 +8,35 @@ require('dotenv').config();
 // Create doctor
 const createDoctor = async (req, res) => {
     try {
-        const { doctorName, doctorEmail, doctorSpecialty, doctorContact, doctorAddress, doctorPassword } = req.body;
-        const newDoctor = new Doctor({ doctorName, doctorEmail, doctorSpecialty, doctorContact, doctorAddress, doctorPassword });
+        const {
+            doctorName,
+            doctorEmail,
+            doctorSpecialty,
+            doctorContact,
+            doctorAddress,
+            doctorPassword
+        } = req.body;
+
+        const newDoctor = new Doctor({
+            doctorName,
+            doctorEmail,
+            doctorSpecialty,
+            doctorContact,
+            doctorAddress,
+            doctorPassword
+        });
+
         await newDoctor.save();
+
         res.status(201).json(newDoctor);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({
+            message: 'Failed to create doctor',
+            error: error.message
+        });
     }
 };
+
 
 //doctor login
 
@@ -117,12 +138,17 @@ const deleteDoctor = async (req, res) => {
     try {
         const doctorId = req.params.id;
         const deletedDoctor = await Doctor.findByIdAndDelete(doctorId);
+
         if (!deletedDoctor) {
-            return res.status(404).json({ message: "Doctor not found" });
+            return res.status(404).json({ message: 'Doctor not found' });
         }
-        res.sendStatus(204);
+
+        res.status(204).send(); // 204: No Content, successful deletion
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({
+            message: 'Failed to delete doctor',
+            error: error.message
+        });
     }
 };
 
@@ -131,12 +157,17 @@ const getDoctorById = async (req, res) => {
     try {
         const doctorId = req.params.id;
         const doctor = await Doctor.findById(doctorId);
+
         if (!doctor) {
-            return res.status(404).json({ message: "Doctor not found" });
+            return res.status(404).json({ message: 'Doctor not found' });
         }
-        res.json(doctor);
+
+        res.status(200).json(doctor);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({
+            message: 'Failed to fetch doctor',
+            error: error.message
+        });
     }
 };
 

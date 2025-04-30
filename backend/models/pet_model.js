@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+ //create Pet schema with user reference and basic validations
 const petSchema = new mongoose.Schema({
     name: { type: String, required: true },
     species: { type: String, required: true },

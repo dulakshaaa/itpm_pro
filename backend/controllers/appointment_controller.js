@@ -5,54 +5,69 @@ exports.createAppointment = async (req, res) => {
         const newAppointment = await Appointment.create(req.body);
         res.status(201).json(newAppointment);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(400).json({ message: 'Failed to create appointment', error: error.message });
     }
 };
+
 
 exports.getAllAppointments = async (req, res) => {
     try {
-        const appointments = await Appointment.find();
-        res.status(200).json(appointments);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-
-exports.getAppointmentById = async (req, res) => {
-    try {
-        const appointment = await Appointment.findById(req.params.id);
-        if (!appointment) {
-            res.status(404).json({ message: 'Appointment not found' });
-            return;
+        // Optional filtering by query parameters (e.g., date, doctorId)
+        const filters = {};
+        if (req.query.date) {
+            filters.date = req.query.date;
         }
-        res.status(200).json(appointment);
+        if (req.query.doctorId) {
+            filters.doctorId = req.query.doctorId;
+        }
+
+        const appointments = await Appointment.find(filters);
+
+        res.status(200).json({
+            success: true,
+            count: appointments.length,
+            data: appointments,
+        });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error fetching appointments:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Server Error',
+            error: error.message,
+        });
     }
 };
 
 exports.updateAppointment = async (req, res) => {
     try {
-        const updatedAppointment = await Appointment.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const updatedAppointment = await Appointment.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
+        );
+
         if (!updatedAppointment) {
-            res.status(404).json({ message: 'Appointment not found' });
-            return;
+            return res.status(404).json({ message: 'Appointment not found' });
         }
+
         res.status(200).json(updatedAppointment);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+
 
 exports.deleteAppointment = async (req, res) => {
     try {
         const appointment = await Appointment.findByIdAndDelete(req.params.id);
+
         if (!appointment) {
-            res.status(404).json({ message: 'Appointment not found' });
-            return;
+            return res.status(404).json({ message: 'Appointment not found' });
         }
+
         res.status(200).json({ message: 'Appointment deleted successfully' });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+

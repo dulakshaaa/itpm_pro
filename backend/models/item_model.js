@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+//add mongoose schema for caged pet records with medical history
 
 const itemSchema = new mongoose.Schema({
     name: String,
@@ -10,3 +11,4 @@ const itemSchema = new mongoose.Schema({
 const Item = mongoose.model('Item', itemSchema);
 
 module.exports = Item;
+//Model of items
