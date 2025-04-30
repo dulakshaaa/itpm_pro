@@ -67,7 +67,7 @@ const BookAppointment = () => {
     const validateForm = () => {
         const errors = {};
         if (!fullName.trim()) {
-            errors.fullName = "Full name is required";
+            errors.fullName = "Full name is Required";//CHANGE view messages
         }
         if (!validateEmail(email)) {
             errors.email = "Please enter a valid email address";
