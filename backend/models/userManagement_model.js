@@ -6,6 +6,6 @@ const userSchema = new mongoose.Schema({
     contactNumber: { type: String, required: true },
     password: { type: String, required: true },
     nationalIdentityCardNumber: { type: String, required: true, unique: true }
-});
+});// new
 
 module.exports = mongoose.model('User', userSchema);
