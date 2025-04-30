@@ -10,7 +10,7 @@ const login = async (req, res) => {
             // Check if email and password match the admin credentials
             if (email === 'admin@gmail.com' && password === 'admin12345') {
                 
-                return res.status(200).json({ message: 'Login successful as admin' });
+                return res.status(200).json({ message: 'Login successful' });
             } else {
                 // Return error message for invalid email or password
                 return res.status(401).json({ message: 'Invalid email or password' });
