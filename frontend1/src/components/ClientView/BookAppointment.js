@@ -194,7 +194,8 @@ const BookAppointment = () => {
                             {errors.contactNumber && <div className="error" style={{ color: "red" }}>{errors.contactNumber}</div>}
                         </div>
                         <div className="appointmentBookingFormInput">
-                            <label htmlFor="doctorName">Doctor :</label>
+                            <label htmlFor="doctorName">DOCTOR :</label> 
+                                    //CHANGE FONTs
                             <select
                                 name="doctorName"
                                 id="doctorName"
