@@ -152,6 +152,7 @@ const deleteDoctor = async (req, res) => {
     }
 };
 
+
 // Get doctor by ID
 const getDoctorById = async (req, res) => {
     try {
