@@ -218,7 +218,7 @@ const Profile = () => {
                         <button onClick={handleUpdate} style={{
                             backgroundColor:'#CFCFCF',
                             gridColumnStart: 1,
-                            width: '30%',
+                            width: '31%', //changed the width
                             padding: '10px 10px',
                             borderRadius: '8px'
                         }}>Update</button>
