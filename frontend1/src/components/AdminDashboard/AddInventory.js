@@ -92,7 +92,7 @@ const AddInventory = () => {
 
     return (
        <div className="createForm">
-    <h1>Inventory Details</h2>
+    <h2>Inventory Details</h2>
     <form onSubmit={handleSubmit}>//add image input field and submit button to inventory form
 
         <div className="createFormInput">
