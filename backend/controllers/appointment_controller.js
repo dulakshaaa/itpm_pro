@@ -11,12 +11,32 @@ exports.createAppointment = async (req, res) => {
 
 exports.getAllAppointments = async (req, res) => {
     try {
-        const appointments = await Appointment.find();
-        res.status(200).json(appointments);
+        // Optional filtering by query parameters (e.g., date, doctorId)
+        const filters = {};
+        if (req.query.date) {
+            filters.date = req.query.date;
+        }
+        if (req.query.doctorId) {
+            filters.doctorId = req.query.doctorId;
+        }
+
+        const appointments = await Appointment.find(filters);
+
+        res.status(200).json({
+            success: true,
+            count: appointments.length,
+            data: appointments,
+        });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error fetching appointments:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Server Error',
+            error: error.message,
+        });
     }
 };
+
 
 exports.getAppointmentById = async (req, res) => {
     try {
