@@ -38,7 +38,7 @@ const login = async (req, res) => {
         console.error('Error during login:', error);
         return res.status(500).json({ message: 'Internal server error' });
     }
-};
+};//new commit
 
 module.exports = {
     login,
